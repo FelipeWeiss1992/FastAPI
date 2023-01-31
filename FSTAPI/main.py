@@ -15,7 +15,7 @@ async def get_AlunoID(alunoID : int):
     return getAlunoID(alunoID)
 
 @app.get('/alunosnome/{nomeAluno}')
-async def get_AlunoNome(nomeAluno : int):
+async def get_AlunoNome(nomeAluno : str):
     return getAlunoNome(nomeAluno)
 
         
