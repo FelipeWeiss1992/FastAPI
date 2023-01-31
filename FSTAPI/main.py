@@ -1,46 +1,39 @@
 from fastapi import FastAPI, HTTPException, status
-from models import Aluno
+from models.aluno import Aluno
+from database import engine
+from controller.aluno import criarAluno, getAlunos, getAlunoID, getAlunoNome, editaAluno, deletaAluno
+
+
 app = FastAPI()
 
+@app.get('/alunos/')
+async def get_Aluno():
+    return getAlunos()
 
-alunos = {
+@app.get('/alunos/{alunoID}')
+async def get_AlunoID(alunoID : int):
+    return getAlunoID(alunoID)
 
-    1 : {'nome' : "Felipe",'idade' : 30, 'email' : 'felipeweiss92@gmail.com'},
-    2 : {'nome' : "Jean",'idade' : 40, 'email' : 'jean@gmail.com'},
-    3 : {'nome' : "Dieter",'idade' : 40, 'email' :'dieter@gmail.com'},
-    4 : {'nome' : "David", 'idade' : 35, 'email' : 'david@gmail.com'}
+@app.get('/alunosnome/{nomeAluno}')
+async def get_AlunoNome(nomeAluno : int):
+    return getAlunoNome(nomeAluno)
 
-}
-
-@app.get('/alunos')
-async def get_AlunosID():
-    return alunos
-
-@app.get('/alunos/{aluno_id}')
-async def get_AlunoID(aluno_id: int):
-    try:
-        aluno = alunos[aluno_id]
-        alunos.update({'id': aluno_id})
-        return aluno
-    except KeyError:
-        raise HTTPException(
-
-        status_code = status.HTTP_404_NOT_FOUND, detail='Aluno não encontrado'
-
-        )
         
-@app.get('/alunosnome/{aluno_nome}')
-async def get_Nomealuno(aluno_nome: str):
-    for aluno in alunos.values():
-        if aluno['nome'] == aluno_nome:
-            return aluno
-        
-@app.post('/alunonovo', status_code=status.HTTP_201_CREATED)
-async def post_NovoAluno(aluno_novo: Aluno):
-    next_id : int = len(alunos) + 1
-    alunos[next_id] = aluno_novo
-    return aluno_novo
-    
+@app.post('/alunos', status_code=status.HTTP_201_CREATED)
+async def post_Aluno(aluno_novo: Aluno):
+    return criarAluno(aluno_novo)
+
+@app.put('/alunos/{item_id}')
+async def put_AlunoID(item_id : int, novosDados :Aluno):
+    return editaAluno(item_id, novosDados)
+
+@app.delete('/alunos/{item_id}')
+async def delete_AlunoID(item_id : int):
+    return deletaAluno(item_id)
+
+@app.get('/calculadora')
+def soma(num1: int, num2: int, num3: int):
+    return num1+num2+num3
 
 
 if __name__ == '__main__':
