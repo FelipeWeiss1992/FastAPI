@@ -18,7 +18,6 @@ def getAlunoID(alunoID):
         statement = select(Aluno).where(Aluno.id == alunoID)
         results = session.exec(statement).first()
         if results == None:
-            print('entrou')
             return f'Aluno com ID ({alunoID}) Não encontrado.'
         return JSONResponse(content=jsonable_encoder(results))
 
@@ -28,7 +27,6 @@ def getAlunoNome(nomeAluno):
         results = session.exec(statement).first()
         print(results)
         if results == None:
-            print('entrou')
             return f'{nomeAluno} Não encontrado.'
         return JSONResponse(content=jsonable_encoder(results))
 
