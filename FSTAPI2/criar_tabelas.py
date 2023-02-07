@@ -1,5 +1,6 @@
 from core.configs import settings
 from core.database import engine
+from models.aluno_models import ALunoModel
 
 async def create_tables():
     async with engine.begin() as conn:
