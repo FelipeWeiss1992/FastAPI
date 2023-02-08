@@ -1,3 +1,12 @@
+from fastapi import FastAPI
+
+app = FastAPI(
+
+    title = 'MoreDevs',
+    version ='007',
+    description ='Desenvolvido Python'
+)
+
 if __name__ == '__main__':
     import uvicorn
 

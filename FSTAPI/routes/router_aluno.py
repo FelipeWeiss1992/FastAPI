@@ -3,13 +3,7 @@ from models.aluno import Aluno
 from database import engine
 from controller.aluno import  getAlunos, getAlunoID, getAlunoNome, criarAluno, editaAluno, deletaAluno
 from fastapi import Query, Path, Header
-
-app = FastAPI(
-
-    title = 'MoreDevs',
-    version ='007',
-    description ='Desenvolvido Python'
-)
+from main import app
 
 @app.get('/alunos', description='Todos os Alunos', summary='Retorna Alunos', response_description='Lista de Alunos Cadastrados')
 async def get_Aluno():
