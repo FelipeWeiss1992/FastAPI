@@ -5,6 +5,8 @@ from fastapi import status
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import Response
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -13,38 +15,41 @@ from models.aluno_models import ALunoModel
 from schemas.aluno_schemas import AlunoSchema
 from core.deps import get_session
 
-
 router = APIRouter()
+
 #Listando todos os Alunos
 @router.get('/', response_model=List[AlunoSchema])
 async def get_alunos(db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(ALunoModel)
         result = await session.execute(query)
-        alunos : List[ALunoModel] = result.scalars().all
+        alunos : List[ALunoModel] = result.scalars().all()
+        print(alunos)
 
-        return alunos
+        return JSONResponse(content=jsonable_encoder(alunos))
+    
 #Listando Aluno por ID
 @router.get('/{alunoID}',response_model=AlunoSchema, status_code=status.HTTP_200_OK)
 async def get_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(ALunoModel).filter(ALunoModel.id == alunoID)
         result = await session.execute(query)
-        aluno = result.scalar_one_or_none
+        aluno = result.scalar_one_or_none()
         if aluno:
-            return aluno
+            return JSONResponse(content=jsonable_encoder(aluno))
         else:
             raise HTTPException(detail=f'Aluno com o ID {alunoID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
 #Criando Aluno
 
-@router.post('/', status_code=status.HTTP_201_CREATED, response_model=AlunoSchema)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_aluno(aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
-    novo_aluno = ALunoModel(nome= aluno.name, email= aluno.email)
+    novo_aluno = ALunoModel(name= aluno.name, email= aluno.email)
     db.add(novo_aluno)
     await db.commit()
-    return novo_aluno
+    return JSONResponse(content=jsonable_encoder(novo_aluno))
 
+#Editando Aluno
 @router.put('/{alunoID}', response_model=AlunoSchema, status_code=status.HTTP_202_ACCEPTED)
 async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
@@ -56,10 +61,11 @@ async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depend
             aluno_up.name = aluno.name
             aluno_up.email = aluno.email
             await sesssion.commit()
-            return aluno_up
+            return JSONResponse(content=jsonable_encoder(aluno_up))
         else:
             raise HTTPException(detail=f'Aluno com o ID {alunoID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
+#Deletando Aluno
 @router.delete('/{alunoID}', response_model=AlunoSchema, status_code=status.HTTP_202_ACCEPTED)
 async def delete_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
