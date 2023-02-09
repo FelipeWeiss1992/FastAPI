@@ -3,7 +3,7 @@ from pydantic import BaseModel as SCBaseModel
 
 class AlunoSchema(SCBaseModel):
     id : Optional[int]
-    name : str
+    nome : str
     email : str
 
     class config():

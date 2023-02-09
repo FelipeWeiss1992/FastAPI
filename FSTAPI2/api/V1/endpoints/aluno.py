@@ -44,7 +44,7 @@ async def get_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_aluno(aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
-    novo_aluno = AlunoModel(name= aluno.name, email= aluno.email)
+    novo_aluno = AlunoModel(nome= aluno.nome, email= aluno.email)
     db.add(novo_aluno)
     await db.commit()
     return JSONResponse(content=jsonable_encoder(novo_aluno))
@@ -58,7 +58,7 @@ async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depend
         aluno_up = result.scalar_one_or_none()
 
         if aluno_up:
-            aluno_up.name = aluno.name
+            aluno_up.nome = aluno.nome
             aluno_up.email = aluno.email
             await sesssion.commit()
             return JSONResponse(content=jsonable_encoder(aluno_up))

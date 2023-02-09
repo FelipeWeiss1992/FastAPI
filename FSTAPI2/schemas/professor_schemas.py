@@ -3,8 +3,8 @@ from pydantic import BaseModel as SCBaseModel
 
 class ProfessorSchema(SCBaseModel):
     id : Optional[int]
-    name : str
-    idade : int
+    nome : str
+    email : str
 
     class config():
         orm_mode = True

@@ -44,7 +44,7 @@ async def get_usuario(usuarioID: int, db: AsyncSession = Depends(get_session)):
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_usuario(usuario : UsuarioSchema, db: AsyncSession = Depends(get_session)):
-    novo_usuario = UsuarioModel(name= usuario.name, nickname= usuario.nickname)
+    novo_usuario = UsuarioModel(nome= usuario.nome, email= usuario.email)
     db.add(novo_usuario)
     await db.commit()
     return JSONResponse(content=jsonable_encoder(novo_usuario))
@@ -58,8 +58,8 @@ async def put_usuario(usuarioID: int, usuario : UsuarioSchema, db: AsyncSession 
         usuario_up = result.scalar_one_or_none()
 
         if usuario_up:
-            usuario_up.name = usuario.name
-            usuario_up.nickname = usuario.nickname
+            usuario_up.nome = usuario.nome
+            usuario_up.email = usuario.email
             await sesssion.commit()
             return JSONResponse(content=jsonable_encoder(usuario_up))
         else:

@@ -43,7 +43,7 @@ async def get_professor(professorID: int, db: AsyncSession = Depends(get_session
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_professor(professor : ProfessorSchema, db: AsyncSession = Depends(get_session)):
-    novo_professor = ProfessorModel(name= professor.name, idade= professor.idade)
+    novo_professor = ProfessorModel(nome= professor.nome, idade= professor.idade)
     db.add(novo_professor)
     await db.commit()
     return JSONResponse(content=jsonable_encoder(novo_professor))
@@ -57,8 +57,8 @@ async def put_professor(professorID: int, professor : ProfessorSchema, db: Async
         professor_up = result.scalar_one_or_none()
 
         if professor_up:
-            professor_up.name = professor.name
-            professor_up.idade = professor.idade
+            professor_up.nome = professor.nome
+            professor_up.email = professor.email
             await sesssion.commit()
             return JSONResponse(content=jsonable_encoder(professor_up))
         else:
