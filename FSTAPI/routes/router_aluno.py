@@ -1,4 +1,4 @@
-from fastapi import  status
+from fastapi import status
 from models.aluno import Aluno
 from database import engine
 from controller.aluno import  getAlunos, getAlunoID, getAlunoNome, criarAluno, editaAluno, deletaAluno

@@ -36,25 +36,33 @@ def criarAluno(aluno:Aluno):
 
 def editaAluno(alunoID, dadosAluno: Aluno):
     with Session(engine) as session:
-        statement = select(Aluno).where(Aluno.id == alunoID)
-        results = session.exec(statement).first()
-        results.nome = dadosAluno.nome
-        results.idade = dadosAluno.idade
-        results.email = dadosAluno.email
+        if Aluno.id == alunoID:
+            statement = select(Aluno).where(Aluno.id == alunoID)
+            results = session.exec(statement).first()
+            results.nome = dadosAluno.nome
+            results.idade = dadosAluno.idade
+            results.email = dadosAluno.email
 
-        session.add(results)
-        session.commit()
-        session.refresh(results)
+            session.add(results)
+            session.commit()
+            session.refresh(results)
 
 
-        return JSONResponse(content=jsonable_encoder(results))
+            return JSONResponse(content=jsonable_encoder(results))
+         
+        else:
+            
+            return f'Aluno com o ID {alunoID} não encontrado.'
 
 def deletaAluno(alunoID):
     with Session(engine) as session:
-        statement = select(Aluno).where(Aluno.id == alunoID)
-        results = session.exec(statement).first()
-        session.delete(results)
-        session.commit()
-        return 'Aluno Deletado'
+        if Aluno.id == alunoID:
+            statement = select(Aluno).where(Aluno.id == alunoID)
+            results = session.exec(statement).first()
+            session.delete(results)
+            session.commit()
+            return 'Aluno Deletado'
+        else:
+            return f'Aluno com o ID {alunoID} não encontrado.'
 
 
