@@ -11,7 +11,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from models.aluno_models import ALunoModel
+from models.aluno_models import AlunoModel
 from schemas.aluno_schemas import AlunoSchema
 from core.deps import get_session
 
@@ -21,9 +21,9 @@ router = APIRouter()
 @router.get('/', response_model=List[AlunoSchema])
 async def get_alunos(db: AsyncSession = Depends(get_session)):
     async with db as session:
-        query = select(ALunoModel)
+        query = select(AlunoModel)
         result = await session.execute(query)
-        alunos : List[ALunoModel] = result.scalars().all()
+        alunos : List[AlunoModel] = result.scalars().all()
         print(alunos)
 
         return JSONResponse(content=jsonable_encoder(alunos))
@@ -32,7 +32,7 @@ async def get_alunos(db: AsyncSession = Depends(get_session)):
 @router.get('/{alunoID}',response_model=AlunoSchema, status_code=status.HTTP_200_OK)
 async def get_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
     async with db as session:
-        query = select(ALunoModel).filter(ALunoModel.id == alunoID)
+        query = select(AlunoModel).filter(AlunoModel.id == alunoID)
         result = await session.execute(query)
         aluno = result.scalar_one_or_none()
         if aluno:
@@ -44,7 +44,7 @@ async def get_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_aluno(aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
-    novo_aluno = ALunoModel(name= aluno.name, email= aluno.email)
+    novo_aluno = AlunoModel(name= aluno.name, email= aluno.email)
     db.add(novo_aluno)
     await db.commit()
     return JSONResponse(content=jsonable_encoder(novo_aluno))
@@ -53,7 +53,7 @@ async def post_aluno(aluno : AlunoSchema, db: AsyncSession = Depends(get_session
 @router.put('/{alunoID}', response_model=AlunoSchema, status_code=status.HTTP_202_ACCEPTED)
 async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
-        query = select(ALunoModel).filter(ALunoModel.id == alunoID)
+        query = select(AlunoModel).filter(AlunoModel.id == alunoID)
         result = await sesssion.execute(query)
         aluno_up = result.scalar_one_or_none()
 
@@ -69,7 +69,7 @@ async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depend
 @router.delete('/{alunoID}', response_model=str, status_code=status.HTTP_202_ACCEPTED)
 async def delete_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
-        query = select(ALunoModel).filter(ALunoModel.id == alunoID)
+        query = select(AlunoModel).filter(AlunoModel.id == alunoID)
         result = await sesssion.execute(query)
         aluno_del = result.scalar_one_or_none()
 
