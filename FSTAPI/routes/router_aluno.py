@@ -1,11 +1,11 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import  status
 from models.aluno import Aluno
 from database import engine
 from controller.aluno import  getAlunos, getAlunoID, getAlunoNome, criarAluno, editaAluno, deletaAluno
 from fastapi import Query, Path, Header
 from main import app
 
-@app.get('/alunos', description='Todos os Alunos', summary='Retorna Alunos', response_description='Lista de Alunos Cadastrados')
+@app.get('/',description='Todos os Alunos', summary='Retorna Alunos', response_description='Lista de Alunos Cadastrados')
 async def get_Aluno():
     return getAlunos()
 
@@ -29,12 +29,4 @@ async def put_AlunoID(alunoID : int, novosDados :Aluno):
 async def delete_AlunoID(alunoID : int):
     return deletaAluno(alunoID)
 
-@app.get('/calculadora')
-async def soma(num1: int = Query(default=None, gt=5), num2: int = Query(default=None, gt=10),xdevs: str = Header(default=None), num3: int = 0):
-    soma = num1+num2+num3
-    print(f'devs: {xdevs}')
-    raise HTTPException(
-
-        status_code=status.HTTP_200_OK, detail=f'NRs = {num1} + {num2} + {num3} = {soma}'
-    )
     

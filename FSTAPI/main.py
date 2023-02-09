@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from routes import router_aluno
 
 app = FastAPI(
 

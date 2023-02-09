@@ -3,15 +3,12 @@ from database import engine
 from sqlmodel import Session,select
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from fastapi import HTTPException, status
-
 
 def getAlunos():
     with Session(engine) as session:
         statement = select(Aluno)
         results = session.exec(statement).all()
         return JSONResponse(content=jsonable_encoder(results))
-
 
 def getAlunoID(alunoID):
     with Session(engine) as session:
@@ -30,7 +27,6 @@ def getAlunoNome(nomeAluno):
             return f'{nomeAluno} Não encontrado.'
         return JSONResponse(content=jsonable_encoder(results))
 
-            
 def criarAluno(aluno:Aluno):
     with Session(engine) as session:
         session.add(aluno)
