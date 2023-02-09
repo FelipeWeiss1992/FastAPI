@@ -1,6 +1,9 @@
 from core.configs import settings
 from core.database import engine
 from models.aluno_models import ALunoModel
+from models.professor_models import ProfessorModel
+from models.usuario_models import UsuarioModel
+
 
 async def create_tables():
     async with engine.begin() as conn:
