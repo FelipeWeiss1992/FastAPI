@@ -43,7 +43,7 @@ async def get_professor(professorID: int, db: AsyncSession = Depends(get_session
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=str)
 async def post_professor(professor : ProfessorSchema, db: AsyncSession = Depends(get_session)):
-    novo_professor = ProfessorModel(nome= professor.nome, idade= professor.idade)
+    novo_professor = ProfessorModel(nome= professor.nome, email= professor.email)
     db.add(novo_professor)
     await db.commit()
     return JSONResponse(content=jsonable_encoder(novo_professor))
