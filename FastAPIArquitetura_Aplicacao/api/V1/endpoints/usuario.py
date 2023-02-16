@@ -47,10 +47,10 @@ async def post_usuario(usuario : UsuarioSchema, db: AsyncSession = Depends(get_s
     novo_usuario = UsuarioModel(nome= usuario.nome, email= usuario.email)
     db.add(novo_usuario)
     await db.commit()
-    return JSONResponse(content=jsonable_encoder(novo_usuario))
+    return status.HTTP_201_CREATED
 
 
-@router.put('/{usuarioID}', response_model=UsuarioSchema, status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{usuarioID}', status_code=status.HTTP_202_ACCEPTED ,response_model=str)
 async def put_usuario(usuarioID: int, usuario : UsuarioSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(UsuarioModel).filter(UsuarioModel.id == usuarioID)
@@ -66,7 +66,7 @@ async def put_usuario(usuarioID: int, usuario : UsuarioSchema, db: AsyncSession 
             raise HTTPException(detail=f'usuario com o ID {usuarioID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
 
-@router.delete('/{usuarioID}', response_model=str,)
+@router.delete('/{usuarioID}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_usuario(usuarioID: int, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(UsuarioModel).filter(UsuarioModel.id == usuarioID)

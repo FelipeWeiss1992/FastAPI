@@ -46,10 +46,10 @@ async def post_professor(professor : ProfessorSchema, db: AsyncSession = Depends
     novo_professor = ProfessorModel(nome= professor.nome, email= professor.email)
     db.add(novo_professor)
     await db.commit()
-    return JSONResponse(content=jsonable_encoder(novo_professor))
+    return status.HTTP_201_CREATED
 
 
-@router.put('/{professorID}', response_model=ProfessorSchema, status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{professorID}', status_code=status.HTTP_202_ACCEPTED, response_model=str)
 async def put_professor(professorID: int, professor : ProfessorSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(ProfessorModel).filter(ProfessorModel.id == professorID)
@@ -64,7 +64,7 @@ async def put_professor(professorID: int, professor : ProfessorSchema, db: Async
         else:
             raise HTTPException(detail=f'professor com o ID {professorID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
-@router.delete('/{professorID}', response_model=str)
+@router.delete('/{professorID}')
 async def delete_professor(professorID: int, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(ProfessorModel).filter(ProfessorModel.id == professorID)
