@@ -47,10 +47,10 @@ async def post_aluno(aluno : AlunoSchema, db: AsyncSession = Depends(get_session
     novo_aluno = AlunoModel(nome= aluno.nome, email= aluno.email)
     db.add(novo_aluno)
     await db.commit()
-    return JSONResponse(content=jsonable_encoder(novo_aluno))
+    return status.HTTP_201_CREATED
 
 
-@router.put('/{alunoID}', response_model=AlunoSchema, status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{alunoID}', status_code=status.HTTP_202_ACCEPTED, response_model=str)
 async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(AlunoModel).filter(AlunoModel.id == alunoID)
@@ -61,12 +61,12 @@ async def put_aluno(alunoID: int, aluno : AlunoSchema, db: AsyncSession = Depend
             aluno_up.nome = aluno.nome
             aluno_up.email = aluno.email
             await sesssion.commit()
-            return JSONResponse(content=jsonable_encoder(aluno_up))
+            return status.HTTP_202_ACCEPTED
         else:
             raise HTTPException(detail=f'Aluno com o ID {alunoID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
 
-@router.delete('/{alunoID}', response_model=str, status_code=status.HTTP_202_ACCEPTED)
+@router.delete('/{alunoID}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_aluno(alunoID: int, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(AlunoModel).filter(AlunoModel.id == alunoID)

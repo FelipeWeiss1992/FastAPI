@@ -66,7 +66,7 @@ async def put_usuario(usuarioID: int, usuario : UsuarioSchema, db: AsyncSession 
             raise HTTPException(detail=f'usuario com o ID {usuarioID} Não Encontrado', status_code=status.HTTP_404_NOT_FOUND)
 
 
-@router.delete('/{usuarioID}', response_model=str, status_code=status.HTTP_202_ACCEPTED)
+@router.delete('/{usuarioID}', response_model=str,)
 async def delete_usuario(usuarioID: int, db: AsyncSession = Depends(get_session)):
     async with db as sesssion:
         query = select(UsuarioModel).filter(UsuarioModel.id == usuarioID)
